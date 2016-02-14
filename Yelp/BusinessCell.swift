@@ -19,17 +19,19 @@ class BusinessCell: UITableViewCell {
   @IBOutlet weak var addressLabel:      UILabel!
   @IBOutlet weak var catagoriesLabel:   UILabel!
   
-  
-  
   var business: Business! {
     didSet {
       nameLabel.text         = business.name
-      thumbImageView.setImageWithURL(business.imageURL!)
       catagoriesLabel.text   = business.categories
       addressLabel.text      = business.address
-      reviewsCountLabel.text = "\(business.reviewCount!) Reviews"
-      ratingsImageView.setImageWithURL(business.ratingImageURL!)
+      reviewsCountLabel.text = "\(business.reviewCount ?? 0) Reviews"
       distanceLabel.text     = business.distance
+      if let url = business.imageURL {
+        thumbImageView.setImageWithURL(url)
+      }
+      if let url = business.ratingImageURL {
+        ratingsImageView.setImageWithURL(url)
+      }
     }
   }
   
@@ -41,6 +43,17 @@ class BusinessCell: UITableViewCell {
     thumbImageView.clipsToBounds      = true
     
     nameLabel.preferredMaxLayoutWidth = nameLabel.frame.size.width
+  }
+  
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    
+    nameLabel.text         = nil
+    catagoriesLabel.text   = nil
+    addressLabel.text      = nil
+    distanceLabel.text     = nil
+    thumbImageView.image   = nil
+    ratingsImageView.image = nil
   }
 
   override func setSelected(selected: Bool, animated: Bool) {

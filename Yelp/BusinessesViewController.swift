@@ -11,8 +11,8 @@ import UIKit
 class BusinessesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
   @IBOutlet weak var tableView: UITableView!
-  @IBOutlet weak var searchBar: UISearchBar!
-
+  
+  var searchBar:  UISearchBar!
   var businesses: [Business]?
   
   override func viewDidLoad() {
@@ -22,24 +22,22 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
     tableView.dataSource         = self
     tableView.rowHeight          = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 120
-    searchBar.delegate           = self
+    
+    searchBar                = UISearchBar()
+    searchBar.delegate       = self
+    searchBar.placeholder    = "Resturants"
+    navigationItem.titleView = searchBar
+    searchBar.sizeToFit()
+    
+    navigationController?.navigationBar.barTintColor = UIColor.redColor()
+    navigationController?.navigationBar.translucent  = false
+    UIApplication.sharedApplication().statusBarStyle = .LightContent
+    
 
     Business.searchWithTerm("Thai", completion: { (businesses: [Business]!, error: NSError!) -> Void in
       self.businesses = businesses
       self.tableView.reloadData()
     })
-    
-
-/* Example of Yelp search with more search options specified
-    Business.searchWithTerm("Restaurants", sort: .Distance, categories: ["asianfusion", "burgers"], deals: true) { (businesses: [Business]!, error: NSError!) -> Void in
-      self.businesses = businesses
-      
-      for business in businesses {
-        print(business.name!)
-        print(business.address!)
-      }
-    }
-*/
   }
 
   override func didReceiveMemoryWarning() {
